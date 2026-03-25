@@ -1,0 +1,51 @@
+<div class="min-h-screen flex flex-col items-stretch text-slate-100 font-sans antialiased overflow-x-hidden bg-slate-900">
+  
+  <!-- Navbar -->
+  <nav class="sticky top-0 z-50 backdrop-blur-md bg-slate-900/80 border-b border-slate-700/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-2 relative group">
+          <div class="absolute -inset-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+          <div class="relative w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 shadow-lg shadow-cyan-500/20"></div>
+          <span class="relative font-bold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-400 ml-2">
+            Covid-19
+          </span>
+        </div>
+        <div class="hidden md:block">
+          <div class="ml-10 flex items-baseline space-x-4">
+            <a routerLink="/home" routerLinkActive="bg-slate-800 text-cyan-400 font-medium border-b-2 border-cyan-400" 
+               [routerLinkActiveOptions]="{exact: true}"
+               class="text-slate-300 hover:bg-slate-800 hover:text-cyan-300 px-3 py-2 rounded-t-md transition-all text-sm font-medium border-b-2 border-transparent hover:border-cyan-400/50">
+              Inicio
+            </a>
+            <a routerLink="/dashboard" routerLinkActive="bg-slate-800 text-cyan-400 font-medium border-b-2 border-cyan-400" 
+               [routerLinkActiveOptions]="{exact: true}"
+               class="text-slate-300 hover:bg-slate-800 hover:text-cyan-300 px-3 py-2 rounded-t-md transition-all text-sm font-medium border-b-2 border-transparent hover:border-cyan-400/50">
+              Global Overview
+            </a>
+            <a routerLink="/region" routerLinkActive="bg-slate-800 text-cyan-400 font-medium border-b-2 border-cyan-400"
+               class="text-slate-300 hover:bg-slate-800 hover:text-cyan-300 px-3 py-2 rounded-t-md transition-all text-sm font-medium border-b-2 border-transparent hover:border-cyan-400/50">
+              Geographic Analysis
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content Area -->
+  <main class="flex-grow w-full">
+    <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 border-t border-slate-800 mt-auto py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center text-slate-500 text-sm">
+      <p>
+        © 2026 Covid-19
+      </p>
+    </div>
+  </footer>
+</div>

@@ -1,0 +1,6 @@
+com\itsqmet\config\DataSetup.class
+com\itsqmet\controller\CovidController.class
+com\itsqmet\EmpresaApplication.class
+com\itsqmet\TestMongo.class
+com\itsqmet\model\CovidStats.class
+com\itsqmet\repository\CovidRepository.class

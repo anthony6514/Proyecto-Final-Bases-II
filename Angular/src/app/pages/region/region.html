@@ -1,0 +1,344 @@
+<div class="container mt-4 animate-fade-in-up geographic-page">
+  <!-- Header -->
+  <div class="geo-hero mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+    <div>
+      <div class="geo-chip mb-3">Análisis epidemiológico</div>
+      <h1 class="geo-title mb-2">Geographic Analysis</h1>
+      <p class="geo-subtitle mb-0">Distribución Regional y Top Global</p>
+    </div>
+
+    <button (click)="loadData()" class="btn geo-btn d-flex align-items-center gap-2">
+      <i class="bi bi-arrow-clockwise"></i>
+      Actualizar Datos
+    </button>
+  </div>
+
+  <div class="row mb-4">
+    <!-- Tabla vw_totales_por_region -->
+    <div class="col-lg-6 mb-4">
+      <div class="card geo-card text-white shadow h-100">
+        <div class="card-header geo-card-header d-flex justify-content-between align-items-center">
+          <span class="geo-section-label">Totales por Región OMS</span>
+          <span class="badge geo-badge geo-badge-secondary">Vista 3</span>
+        </div>
+
+        <div class="card-body overflow-auto" style="max-height: 430px;">
+          <div class="mb-3">
+            <input
+              type="text"
+              [(ngModel)]="searchRegion"
+              placeholder="Buscar región..."
+              class="form-control geo-input"
+            />
+          </div>
+
+          <table class="table table-dark table-striped table-hover mb-0 geo-table">
+            <thead>
+              <tr>
+                <th scope="col">Región</th>
+                <th scope="col">Casos</th>
+                <th scope="col">Muertes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let region of filteredRegiones">
+                <td>{{ region.Region || region._id || 'N/A' }}</td>
+                <td class="text-info fw-bold">{{ (region.TotalCases || region.totalCases || 0) | number }}</td>
+                <td class="text-danger fw-bold">{{ (region.TotalDeaths || region.totalDeaths || 0) | number }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div *ngIf="filteredRegiones.length === 0" class="text-center text-muted mt-3 py-3">
+            No se encontraron regiones.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla vw_comparativa_andina -->
+    <div class="col-lg-6 mb-4">
+      <div class="card geo-card text-white shadow h-100">
+        <div class="card-header geo-card-header d-flex justify-content-between align-items-center">
+          <span class="geo-section-label">Comparativa Andina</span>
+          <span class="badge geo-badge geo-badge-primary">Vista 4</span>
+        </div>
+
+        <div class="card-body overflow-auto" style="max-height: 430px;">
+          <div class="mb-3">
+            <input
+              type="text"
+              [(ngModel)]="searchAndina"
+              placeholder="Buscar país andino..."
+              class="form-control geo-input"
+            />
+          </div>
+
+          <table class="table table-dark table-striped table-hover mb-0 geo-table">
+            <thead>
+              <tr>
+                <th scope="col">País</th>
+                <th scope="col">Casos</th>
+                <th scope="col">Muertes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let andina of filteredAndina">
+                <td>{{ andina.Pais || andina.Country || andina.Name || 'N/A' }}</td>
+                <td class="text-info fw-bold">{{ (andina.TotalCases || andina.cases || 0) | number }}</td>
+                <td class="text-danger fw-bold">{{ (andina.TotalDeaths || andina.deaths || 0) | number }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div *ngIf="filteredAndina.length === 0" class="text-center text-muted mt-3 py-3">
+            No se encontraron resultados andinos.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="row">
+    <!-- Chart 4: Top 10 Contagios -->
+    <div class="col-lg-6 mb-4">
+      <div class="card geo-card text-white shadow h-100">
+        <div class="card-header geo-card-header d-flex justify-content-between align-items-center gap-3">
+          <h5 class="m-0 chart-title chart-title-info">Top 10 Contagios</h5>
+          <div class="w-50">
+            <input
+              type="text"
+              [(ngModel)]="filterContagios"
+              placeholder="Filtrar país..."
+              class="form-control form-control-sm geo-input"
+            />
+          </div>
+        </div>
+
+        <div class="card-body p-0 position-relative geo-chart-frame" style="min-height: 460px;">
+          <iframe
+            style="background: transparent; border: none; width: 100%; height: 100%; position: absolute; inset:0;"
+            [src]="getSafeUrl('contagios', filterContagios)"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart 5: Distribución Continente -->
+    <div class="col-lg-6 mb-4">
+      <div class="card geo-card text-white shadow h-100">
+        <div class="card-header geo-card-header d-flex justify-content-between align-items-center gap-3">
+          <h5 class="m-0 chart-title chart-title-success">Distribución por Región</h5>
+          <div class="w-50">
+            <input
+              type="text"
+              [(ngModel)]="filterContinente"
+              placeholder="Filtrar región..."
+              class="form-control form-control-sm geo-input"
+            />
+          </div>
+        </div>
+
+        <div class="card-body p-0 position-relative geo-chart-frame" style="min-height: 460px;">
+          <iframe
+            style="background: transparent; border: none; width: 100%; height: 100%; position: absolute; inset:0;"
+            [src]="getSafeUrl('continente', filterContinente)"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes fade-in-up {
+    0% {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.55s ease-out;
+  }
+
+  .geographic-page {
+    padding-bottom: 1.5rem;
+  }
+
+  .geo-hero {
+    padding: 1.5rem 1.75rem;
+    border-radius: 28px;
+    border: 1px solid rgba(100, 116, 139, 0.22);
+    background:
+      radial-gradient(circle at top right, rgba(14, 165, 233, 0.08), transparent 28%),
+      radial-gradient(circle at bottom left, rgba(34, 197, 94, 0.08), transparent 28%),
+      linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.82));
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.24);
+    backdrop-filter: blur(10px);
+  }
+
+  .geo-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.42rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    background: rgba(14, 165, 233, 0.08);
+    color: #7dd3fc;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .geo-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+    margin: 0;
+  }
+
+  .geo-subtitle {
+    color: #94a3b8;
+    font-size: 1rem;
+  }
+
+  .geo-btn {
+    padding: 0.9rem 1.3rem;
+    border-radius: 16px;
+    border: 1px solid rgba(34, 211, 238, 0.45);
+    color: #67e8f9;
+    background: rgba(8, 47, 73, 0.22);
+    font-weight: 700;
+    transition: all 0.25s ease;
+  }
+
+  .geo-btn:hover {
+    transform: translateY(-2px);
+    background: rgba(8, 47, 73, 0.38);
+    box-shadow: 0 12px 28px rgba(34, 211, 238, 0.12);
+  }
+
+  .geo-card {
+    border: 1px solid rgba(100, 116, 139, 0.22) !important;
+    border-radius: 24px;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(17, 24, 39, 0.97), rgba(15, 23, 42, 0.95)) !important;
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.22);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+
+  .geo-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 22px 42px rgba(0, 0, 0, 0.28);
+    border-color: rgba(148, 163, 184, 0.35) !important;
+  }
+
+  .geo-card-header {
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid rgba(100, 116, 139, 0.18) !important;
+    background: rgba(30, 41, 59, 0.58) !important;
+  }
+
+  .geo-section-label {
+    color: #e2e8f0;
+    font-size: 0.86rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .geo-badge {
+    padding: 0.45rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .geo-badge-secondary {
+    background: rgba(148, 163, 184, 0.16);
+    color: #e2e8f0;
+  }
+
+  .geo-badge-primary {
+    background: rgba(59, 130, 246, 0.2);
+    color: #93c5fd;
+  }
+
+  .geo-input {
+    background: rgba(15, 23, 42, 0.94) !important;
+    border: 1px solid rgba(71, 85, 105, 0.82) !important;
+    color: #ffffff !important;
+    border-radius: 999px !important;
+    padding: 0.72rem 1rem !important;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.22);
+  }
+
+  .geo-input::placeholder {
+    color: #94a3b8 !important;
+  }
+
+  .geo-input:focus {
+    border-color: rgba(34, 211, 238, 0.85) !important;
+    box-shadow: 0 0 0 0.2rem rgba(34, 211, 238, 0.14) !important;
+    background: rgba(15, 23, 42, 0.98) !important;
+  }
+
+  .geo-table thead th {
+    color: #f8fafc;
+    font-weight: 800;
+    border-bottom-color: rgba(100, 116, 139, 0.18) !important;
+  }
+
+  .geo-table tbody td,
+  .geo-table tbody th {
+    vertical-align: middle;
+  }
+
+  .chart-title {
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  .chart-title-info {
+    color: #38bdf8;
+  }
+
+  .chart-title-success {
+    color: #4ade80;
+  }
+
+  .geo-chart-frame {
+    background:
+      radial-gradient(circle at top right, rgba(56, 189, 248, 0.06), transparent 30%),
+      radial-gradient(circle at bottom left, rgba(74, 222, 128, 0.06), transparent 30%);
+  }
+
+  @media (max-width: 768px) {
+    .geo-hero {
+      padding: 1.25rem;
+    }
+
+    .geo-btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .geo-card-header {
+      flex-direction: column;
+      align-items: stretch !important;
+    }
+
+    .geo-card-header .w-50 {
+      width: 100% !important;
+    }
+  }
+</style>

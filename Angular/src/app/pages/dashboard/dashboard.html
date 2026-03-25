@@ -1,0 +1,285 @@
+<div class="dashboard-wrapper container mt-4 animate-fade-in-up">
+  <div class="hero-bar mb-5 d-flex justify-content-between align-items-center flex-wrap gap-3">
+    <div>
+      <h1 class="dashboard-title mb-2">Dashboard Principal</h1>
+      <p class="dashboard-subtitle mb-0">Resumen Global y Ecuador</p>
+    </div>
+
+    <button (click)="loadData()" class="btn dashboard-btn d-flex align-items-center gap-2">
+      <i class="bi bi-arrow-clockwise"></i>
+      Actualizar Datos
+    </button>
+  </div>
+
+  <!-- Tarjetas vw_ecuador_stats -->
+  <div class="row mb-5" *ngIf="ecuadorData">
+    <div class="col-md-6 mb-3">
+      <div class="card dashboard-card stat-card stat-card-primary h-100">
+        <div class="card-body">
+          <h5 class="card-label">Casos Ecuador (Vista)</h5>
+          <h2 class="card-value">
+            {{ ecuadorData.TotalCases || ecuadorData.cases || ecuadorData['Cases - cumulative total'] || 'N/A' | number }}
+          </h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <div class="card dashboard-card stat-card stat-card-danger h-100">
+        <div class="card-body">
+          <h5 class="card-label">Muertes Ecuador (Vista)</h5>
+          <h2 class="card-value">
+            {{ ecuadorData.TotalDeaths || ecuadorData.deaths || ecuadorData['Deaths - cumulative total'] || 'N/A' | number }}
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fila 1 -->
+  <div class="row">
+    <div class="col-lg-6 mb-4">
+      <div class="card dashboard-card dashboard-panel h-100">
+        <div class="card-header dashboard-header d-flex justify-content-between align-items-center">
+          <h5 class="m-0 section-title">Top 10 Muertes por País</h5>
+          <span class="badge custom-badge badge-secondary-soft">Vista 2</span>
+        </div>
+
+        <div class="card-body overflow-auto" style="max-height: 480px;">
+          <div class="mb-3">
+            <input
+              type="text"
+              [(ngModel)]="searchTop"
+              placeholder="Buscar país..."
+              class="form-control dashboard-input"
+            />
+          </div>
+
+          <table class="table table-dark table-striped table-hover mb-0 dashboard-table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">País</th>
+                <th scope="col">Muertes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let pais of filteredTopMuertes; let i = index">
+                <th scope="row">{{ i + 1 }}</th>
+                <td>{{ pais.Pais || pais.Country || 'N/A' }}</td>
+                <td class="text-danger fw-bold">{{ (pais['Total Muertes'] || pais.TotalDeaths || 0) | number }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div *ngIf="filteredTopMuertes.length === 0" class="text-center text-muted mt-3 py-3">
+            No se encontraron coincidencias.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6 mb-4">
+      <div class="card dashboard-card dashboard-panel h-100">
+        <div class="card-header dashboard-header d-flex justify-content-between align-items-center gap-3">
+          <h5 class="m-0 section-title text-primary-emphasis">Mapa Global (Atlas Chart)</h5>
+          <div class="w-50">
+            <input
+              type="text"
+              [(ngModel)]="filterMap"
+              placeholder="Filtrar región (WHO Region)..."
+              class="form-control form-control-sm dashboard-input"
+            />
+          </div>
+        </div>
+
+        <div class="card-body p-0 position-relative chart-frame" style="min-height: 400px;">
+          <iframe
+            style="background: transparent; border: none; width: 100%; height: 100%; position: absolute; inset: 0;"
+            [src]="getSafeUrl('map', filterMap)"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fila 2 -->
+  <div class="row">
+    <div class="col-lg-6 mb-4">
+      <div class="card dashboard-card dashboard-panel h-100">
+        <div class="card-header dashboard-header d-flex justify-content-between align-items-center gap-3">
+          <h5 class="m-0 section-title text-info">Incidencia (Atlas)</h5>
+          <div class="w-50">
+            <input
+              type="text"
+              [(ngModel)]="filterIncidencia"
+              placeholder="Filtrar país (Country)..."
+              class="form-control form-control-sm dashboard-input"
+            />
+          </div>
+        </div>
+
+        <div class="card-body p-0 position-relative chart-frame" style="min-height: 400px;">
+          <iframe
+            style="background: transparent; border: none; width: 100%; height: 100%; position: absolute; inset: 0;"
+            [src]="getSafeUrl('incidencia', filterIncidencia)"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6 mb-4">
+      <div class="card dashboard-card dashboard-panel h-100">
+        <div class="card-header dashboard-header d-flex justify-content-between align-items-center gap-3">
+          <h5 class="m-0 section-title text-danger">Fallecimientos (Atlas)</h5>
+          <div class="w-50">
+            <input
+              type="text"
+              [(ngModel)]="filterMuertesChart"
+              placeholder="Filtrar país (Country)..."
+              class="form-control form-control-sm dashboard-input"
+            />
+          </div>
+        </div>
+
+        <div class="card-body p-0 position-relative chart-frame" style="min-height: 400px;">
+          <iframe
+            style="background: transparent; border: none; width: 100%; height: 100%; position: absolute; inset: 0;"
+            [src]="getSafeUrl('muertes', filterMuertesChart)"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fila 3 -->
+  <div class="row">
+    <div class="col-lg-6 mb-4">
+      <div class="card dashboard-card dashboard-panel h-100">
+        <div class="card-header dashboard-header d-flex justify-content-between align-items-center">
+          <h5 class="m-0 section-title">Comparativa Región Andina</h5>
+          <span class="badge custom-badge badge-primary-soft">Vista 4</span>
+        </div>
+
+        <div class="card-body overflow-auto" style="max-height: 400px;">
+          <div class="mb-3">
+            <input
+              type="text"
+              [(ngModel)]="searchAndina"
+              placeholder="Filtrar región andina..."
+              class="form-control form-control-sm dashboard-input"
+            />
+          </div>
+
+          <table class="table table-dark table-sm table-hover mb-0 dashboard-table">
+            <thead>
+              <tr>
+                <th>País</th>
+                <th>Casos</th>
+                <th>Muertes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of filteredAndina">
+                <td>{{ data.Pais }}</td>
+                <td class="text-info fw-bold">{{ (data.TotalCases || 0) | number }}</td>
+                <td class="text-danger fw-bold">{{ (data.TotalDeaths || 0) | number }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div *ngIf="filteredAndina.length === 0" class="text-center text-muted mt-3">
+            No hay resultados.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6 mb-4">
+      <div class="card dashboard-card dashboard-panel h-100">
+        <div class="card-header dashboard-header d-flex justify-content-between align-items-center">
+          <h5 class="m-0 section-title">Top 10 Tasa de Letalidad (%)</h5>
+          <span class="badge custom-badge badge-danger-soft">Vista 5</span>
+        </div>
+
+        <div class="card-body overflow-auto" style="max-height: 400px;">
+          <div class="mb-3">
+            <input
+              type="text"
+              [(ngModel)]="searchLetalidad"
+              placeholder="Filtrar tasa..."
+              class="form-control form-control-sm dashboard-input"
+            />
+          </div>
+
+          <table class="table table-dark table-sm table-hover mb-0 dashboard-table">
+            <thead>
+              <tr>
+                <th>País</th>
+                <th>Letalidad</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of filteredLetalidad">
+                <td>{{ data.Pais }}</td>
+                <td class="fw-bold text-warning">{{ (data.TasaLetalidad || 0) | number:'1.2-2' }}%</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div *ngIf="filteredLetalidad.length === 0" class="text-center text-muted mt-3">
+            Sin resultados.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fila 4 -->
+  <div class="row">
+    <div class="col-12 mb-4">
+      <div class="card dashboard-card dashboard-panel border-info region-panel">
+        <div class="card-header dashboard-header d-flex justify-content-between align-items-center">
+          <h5 class="m-0 section-title text-info">Detalles por Región (Lookup)</h5>
+          <span class="badge custom-badge badge-info-soft text-dark">Data Bind</span>
+        </div>
+
+        <div class="card-body overflow-auto" style="max-height: 500px;">
+          <div class="mb-4">
+            <input
+              type="text"
+              [(ngModel)]="searchRegion"
+              placeholder="Filtrar por país o región (Ej: Ecuador, Europe)..."
+              class="form-control dashboard-input dashboard-input-lg"
+            />
+          </div>
+
+          <div *ngIf="filteredStatsRegion.length === 0" class="text-center text-muted py-5">
+            No se encontraron regiones con ese nombre.
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 mb-3" *ngFor="let item of filteredStatsRegion">
+              <div class="region-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                  <h6 class="text-white fw-bold mb-0">{{ item.Pais }}</h6>
+                  <span class="badge rounded-pill region-badge">{{ item.Region }}</span>
+                </div>
+
+                <p class="small region-text mb-3">"{{ item.Description }}"</p>
+
+                <div class="d-flex align-items-center mt-auto">
+                  <div class="flex-grow-1 progress-shell">
+                    <div class="progress-fill"></div>
+                  </div>
+                  <span class="ms-3 small fw-bold text-info">{{ (item.Casos || 0) | number }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

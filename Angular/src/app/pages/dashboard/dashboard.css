@@ -28,17 +28,17 @@
 .dashboard-btn {
   padding: 0.85rem 1.3rem;
   border-radius: 14px;
-  border: 1px solid rgba(34, 211, 238, 0.6);
-  color: #22d3ee;
-  background: rgba(8, 47, 73, 0.22);
+  border: 1px solid rgba(168, 85, 247, 0.6);
+  color: #c084fc;
+  background: rgba(59, 7, 100, 0.22);
   transition: all 0.25s ease;
   font-weight: 600;
 }
 
 .dashboard-btn:hover {
   transform: translateY(-2px);
-  background: rgba(8, 47, 73, 0.4);
-  box-shadow: 0 12px 24px rgba(34, 211, 238, 0.12);
+  background: rgba(59, 7, 100, 0.4);
+  box-shadow: 0 12px 24px rgba(168, 85, 247, 0.18);
 }
 
 .dashboard-card {
@@ -76,7 +76,7 @@
 }
 
 .stat-card-primary {
-  border-left: 5px solid #0d6efd !important;
+  border-left: 5px solid #a855f7 !important;
 }
 
 .stat-card-danger {
@@ -114,8 +114,8 @@
 }
 
 .dashboard-input:focus {
-  border-color: rgba(34, 211, 238, 0.85) !important;
-  box-shadow: 0 0 0 0.2rem rgba(34, 211, 238, 0.15) !important;
+  border-color: rgba(168, 85, 247, 0.85) !important;
+  box-shadow: 0 0 0 0.2rem rgba(168, 85, 247, 0.18) !important;
   background: rgba(15, 23, 42, 0.98) !important;
 }
 
@@ -149,8 +149,8 @@
 }
 
 .badge-primary-soft {
-  background: rgba(59, 130, 246, 0.2);
-  color: #93c5fd;
+  background: rgba(168, 85, 247, 0.2);
+  color: #d8b4fe;
 }
 
 .badge-danger-soft {
@@ -159,17 +159,17 @@
 }
 
 .badge-info-soft {
-  background: rgba(34, 211, 238, 0.24);
-  color: #083344;
+  background: rgba(168, 85, 247, 0.24);
+  color: #3b0764;
 }
 
 .chart-frame {
-  background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.08), transparent 35%),
+  background: radial-gradient(circle at top right, rgba(168, 85, 247, 0.08), transparent 35%),
               radial-gradient(circle at bottom left, rgba(239, 68, 68, 0.06), transparent 35%);
 }
 
 .region-panel {
-  border-top: 4px solid #0dcaf0 !important;
+  border-top: 4px solid #a855f7 !important;
 }
 
 .region-card {
@@ -184,7 +184,7 @@
 
 .region-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(34, 211, 238, 0.35);
+  border-color: rgba(168, 85, 247, 0.45);
 }
 
 .region-badge {
@@ -208,12 +208,12 @@
 .progress-fill {
   width: 60%;
   height: 100%;
-  background: linear-gradient(90deg, #06b6d4, #38bdf8);
+  background: linear-gradient(90deg, #9333ea, #c084fc);
   border-radius: 999px;
 }
 
 .text-primary-emphasis {
-  color: #60a5fa !important;
+  color: #c084fc !important;
 }
 
 @media (max-width: 768px) {
